@@ -11,13 +11,15 @@ import Data.String.Utils (replace)
 import Data.Time.Clock
 import Data.Time.LocalTime
 
-
 downloadPage ::  String -> IO [String]
 downloadPage url = do 
                   return.lines.bsToStr =<< simpleHttp url
                 where bsToStr = map (chr . fromEnum).LB.unpack
+                
+timelogfilename :: String     
+timelogfilename = "time.log"
 
-timelogfilename = "timelog.log"
+writetimelog :: String -> IO()
 writetimelog hiturl = do
             curdatetime <- formCurrentTime
             appendFile timelogfilename $ concat[curdatetime," ", hiturl, "\n"]
@@ -35,21 +37,28 @@ formCurrentTime = do
                         reverse.show $ x * 10
                        else
                         show x     
-                        
-htmllogfilenme = "htmllog.log"
-writehtmllog html = writeFile htmllogfilenme $ concat html
+                
+htmllogfilenme :: String                
+htmllogfilenme = "html.log"
+
+writehtmllog :: String -> IO()
+writehtmllog html = writeFile htmllogfilenme html
              
 main :: IO()
 main = do
     args <- getArgs
     if (1 <= length args) then 
         do pagehtml <- downloadPage (args!!0)
+        
+           -- Check if required to log timestamp
            if ("-l" `elem` args) then
             writetimelog (args!!0)
            else
             return ()
+            
+           -- Check if requireed to log the output html
            if ("-p" `elem` args) then
-            writehtmllog pagehtml
+            writehtmllog $ concat pagehtml
            else
             return ()
     else
