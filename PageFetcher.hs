@@ -34,8 +34,10 @@ formCurrentTime = do
           pad2zero x = if x < 10 then
                         reverse.show $ x * 10
                        else
-                        show x             
-
+                        show x     
+                        
+htmllogfilenme = "htmllog.log"
+writehtmllog html = writeFile htmllogfilenme $ concat html
              
 main :: IO()
 main = do
@@ -44,6 +46,10 @@ main = do
         do pagehtml <- downloadPage (args!!0)
            if ("-l" `elem` args) then
             writetimelog (args!!0)
+           else
+            return ()
+           if ("-p" `elem` args) then
+            writehtmllog pagehtml
            else
             return ()
     else
