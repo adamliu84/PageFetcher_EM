@@ -11,6 +11,7 @@ import Data.String.Utils (replace)
 import Data.Time.Clock
 import Data.Time.LocalTime
 import Control.Monad
+import GHC.IO.Encoding
 
 downloadPage ::  String -> IO [String]
 downloadPage url = do 
@@ -47,6 +48,7 @@ writehtmllog html = writeFile htmllogfilenme html
              
 main :: IO()
 main = do
+    setLocaleEncoding utf8
     args <- getArgs
     if (1 <= length args) then 
         do pagehtml <- downloadPage (args!!0)        
