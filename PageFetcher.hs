@@ -10,6 +10,7 @@ import Data.List.Split
 import Data.String.Utils (replace)
 import Data.Time.Clock
 import Data.Time.LocalTime
+import Control.Monad
 
 downloadPage ::  String -> IO [String]
 downloadPage url = do 
@@ -48,19 +49,11 @@ main :: IO()
 main = do
     args <- getArgs
     if (1 <= length args) then 
-        do pagehtml <- downloadPage (args!!0)
-        
+        do pagehtml <- downloadPage (args!!0)        
            -- Check if required to log timestamp
-           if ("-l" `elem` args) then
-            writetimelog (args!!0)
-           else
-            return ()
-            
+           when ("-l" `elem` args) $ writetimelog (args!!0)                       
            -- Check if requireed to log the output html
-           if ("-p" `elem` args) then
-            writehtmllog $ concat pagehtml
-           else
-            return ()
+           when ("-p" `elem` args) $ writehtmllog $ concat pagehtml           
     else
         error $ "Invalid arguments input"
     
