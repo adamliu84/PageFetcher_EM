@@ -45,17 +45,31 @@ htmllogfilenme = "html.log"
 
 writehtmllog :: String -> IO()
 writehtmllog html = writeFile htmllogfilenme html
+
+helptext :: String
+helptext = "Usage: PageFetcher target_page [-l] [-p] \
+            \ \n\n \
+            \Options:\n \
+            \\t-l\t\tOutput timestamp with target page\n\
+            \\t-p\t\tOutput grabbed html text\n\
+            \\t-h\t\tDisplay this help\
+            \\n\n\
+            \Sample:\n \
+            \\tPageFetcher.exe http://www.nosuchpage.com -h -l -p\
+            \\n\n"
              
 main :: IO()
 main = do
     setLocaleEncoding utf8
     args <- getArgs
     if (1 <= length args) then 
-        do pagehtml <- downloadPage (args!!0)        
+        do pagehtml <- downloadPage (args!!0)
+            -- Check if required to print help
+           when ("-h" `elem` args) $ putStr $ helptext
            -- Check if required to log timestamp
            when ("-l" `elem` args) $ writetimelog (args!!0)                       
            -- Check if requireed to log the output html
            when ("-p" `elem` args) $ writehtmllog $ concat pagehtml           
     else
-        error $ "Invalid arguments input"
-    
+        do putStr $ helptext ++ "\n"
+           error $ "Invalid arguments input"
