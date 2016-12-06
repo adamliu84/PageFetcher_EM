@@ -40,11 +40,11 @@ formCurrentTime = do
                        else
                         show x     
                 
-htmllogfilenme :: String                
-htmllogfilenme = "html.log"
+htmllogfilename :: String                
+htmllogfilename = "html.log"
 
 writehtmllog :: String -> IO()
-writehtmllog html = writeFile htmllogfilenme html
+writehtmllog html = writeFile htmllogfilename html
 
 helptext :: String
 helptext = "Usage: PageFetcher target_page [-l] [-p] \
